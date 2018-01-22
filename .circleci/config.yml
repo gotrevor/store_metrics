@@ -1,0 +1,31 @@
+version: 2
+executorType: docker
+jobs:
+  build:
+    docker:
+      - image: 352302322568.dkr.ecr.us-east-1.amazonaws.com/mm-ecs/ci-node:6.10.1.8
+    working_directory: ~/store_metrics
+    steps:
+      - checkout
+      - restore_cache:
+          key: store_metrics-production-{{ .Branch }}-{{ checksum "package.json" }}
+      - run:
+          command: npm update --production
+      - run:
+          command: .circleci/upload-to-s3 .
+      - save_cache:
+          key: store_metrics-production-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - ~/store_metrics/node_modules
+      - restore_cache:
+          key: store_metrics-full-{{ .Branch }}-{{ checksum "package.json" }}
+      - run:
+          command: npm install
+      - save_cache:
+          key: store_metrics-full-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - ~/store_metrics/node_modules
+      - run:
+          command: npm test
+      - store_artifacts:
+          path: ~/store_metrics/coverage

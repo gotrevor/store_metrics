@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+# http://stackoverflow.com/questions/1371261/get-current-directory-name-without-full-path-in-bash-script
+package_name=${PWD##*/}
+
+s3_lambda_zip_path=${TEST_BUCKET}/trevor-talk/ci/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/${CIRCLE_BUILD_NUM}
+export s3_lambda_zip_file=${s3_lambda_zip_path}/$package_name.zip
+
+zip -r -q -9 $package_name.zip . -x .git/\*
+
+ls -l $package_name.zip
+
+aws s3 cp $package_name.zip s3://${s3_lambda_zip_file}
+echo "Here's where you can find the archive:"
+echo https://s3-us-west-2.amazonaws.com/${s3_lambda_zip_file}
