@@ -7,4 +7,7 @@ const AWS = require('aws-sdk');
 
 AWS.config.setPromisesDependency(Q.Promise);
 
-console.log('just a stub');
+exports.handler = function (event, context, callback, _settings) {
+  console.log(JSON.stringify(event, null, 2));
+  callback(null);
+};
