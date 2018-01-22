@@ -11,7 +11,7 @@ const devCallback = (err, _note) => {
   console.error('devCallback called with success.');
 };
 
-index.handler(event(), null, devCallback);
+index.handler(event(), null, devCallback).done();
 
 
 function event() {
