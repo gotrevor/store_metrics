@@ -13,4 +13,4 @@ ls -l $package_name.zip
 
 aws s3 cp $package_name.zip s3://${s3_lambda_zip_file}
 echo "Here's where you can find the archive:"
-echo https://s3-us-west-2.amazonaws.com/${s3_lambda_zip_file}
+echo https://s3-us-east-1.amazonaws.com/${s3_lambda_zip_file}
