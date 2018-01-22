@@ -4,10 +4,23 @@
 
 const Q = require('q');
 const AWS = require('aws-sdk');
+const _ = require('lodash');
 
 AWS.config.setPromisesDependency(Q.Promise);
 
 exports.handler = function (event, context, callback, _settings) {
-  console.log(JSON.stringify(event, null, 2));
+  const records = event.Records;
+  const data = _.map(records, (record) => {
+    return JSON.parse(new Buffer(record.kinesis.data, 'base64'));
+  });
+
+  processData(data);
+
   callback(null);
 };
+
+function processData(data) {
+  _.each(data, (datum) => {
+    console.log(JSON.stringify(datum));
+  });
+}
